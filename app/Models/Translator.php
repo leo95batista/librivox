@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
- * Class Author
+ * Class Translator
  *
  * @package App\Models
  * @mixin Builder
  */
-class Author extends Model
+class Translator extends Model
 {
     use HasFactory;
 

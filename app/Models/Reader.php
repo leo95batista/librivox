@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
- * Class Author
+ * Class Reader
  *
  * @package App\Models
  * @mixin Builder
  */
-class Author extends Model
+class Reader extends Model
 {
     use HasFactory;
 
@@ -32,19 +32,16 @@ class Author extends Model
      * @var string[]
      */
     protected $fillable = [
-        'first_name',
-        'last_name',
-        'dob',
-        'dod'
+        'display_name'
     ];
 
     /**
-     * Books relationship
+     * Sections relationship
      *
      * @return BelongsToMany
      */
-    public function books()
+    public function sections()
     {
-        return $this->belongsToMany(Book::class);
+        return $this->belongsToMany(Section::class);
     }
 }

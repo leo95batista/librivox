@@ -4,14 +4,14 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAuthorsTable extends Migration
+class CreateGenresTable extends Migration
 {
     /**
      * Table name
      *
      * @var string
      */
-    private $table = 'authors';
+    private $table = 'genres';
 
     /**
      * Run the migrations.
@@ -22,10 +22,7 @@ class CreateAuthorsTable extends Migration
     {
         Schema::create($this->table, function (Blueprint $table) {
             $table->id();
-            $table->text('first_name')->nullable();
-            $table->text('last_name')->nullable();
-            $table->text('dob')->nullable();
-            $table->text('dod')->nullable();
+            $table->text('name')->nullable();
             $table->timestamps();
         });
     }

@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
- * Class Author
+ * Class Genre
  *
  * @package App\Models
  * @mixin Builder
  */
-class Author extends Model
+class Genre extends Model
 {
     use HasFactory;
 
@@ -32,10 +32,7 @@ class Author extends Model
      * @var string[]
      */
     protected $fillable = [
-        'first_name',
-        'last_name',
-        'dob',
-        'dod'
+        'name'
     ];
 
     /**

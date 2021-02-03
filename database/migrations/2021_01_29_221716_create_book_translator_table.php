@@ -4,14 +4,14 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAuthorsTable extends Migration
+class CreateBookTranslatorTable extends Migration
 {
     /**
      * Table name
      *
      * @var string
      */
-    private $table = 'authors';
+    private $table = 'book_translator';
 
     /**
      * Run the migrations.
@@ -22,11 +22,16 @@ class CreateAuthorsTable extends Migration
     {
         Schema::create($this->table, function (Blueprint $table) {
             $table->id();
-            $table->text('first_name')->nullable();
-            $table->text('last_name')->nullable();
-            $table->text('dob')->nullable();
-            $table->text('dod')->nullable();
-            $table->timestamps();
+            $table->bigInteger('book_id')->unsigned();
+            $table->bigInteger('translator_id')->unsigned();
+
+            $table->foreign('book_id')->references('id')
+                ->on('books')
+                ->cascadeOnDelete();
+
+            $table->foreign('translator_id')->references('id')
+                ->on('translators')
+                ->cascadeOnDelete();
         });
     }
 
@@ -37,6 +42,6 @@ class CreateAuthorsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists($this->table);
+        Schema::dropIfExists('book_translator');
     }
 }

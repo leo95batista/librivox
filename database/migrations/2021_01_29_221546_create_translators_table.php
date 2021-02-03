@@ -4,14 +4,14 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAuthorsTable extends Migration
+class CreateTranslatorsTable extends Migration
 {
     /**
      * Table name
      *
      * @var string
      */
-    private $table = 'authors';
+    private $table = 'translators';
 
     /**
      * Run the migrations.

@@ -2,6 +2,8 @@
 
 namespace App\Contracts;
 
+use Illuminate\Support\Collection;
+
 interface LibriVox
 {
     /**
@@ -19,6 +21,13 @@ interface LibriVox
     public function audiobooks();
 
     /**
+     * Search audio tracks
+     *
+     * @return $this
+     */
+    public function audiotracks();
+
+    /**
      * Fields to return
      *
      * @param array $fields
@@ -32,7 +41,7 @@ interface LibriVox
      * @param int $offset
      * @return $this
      */
-    public function offset(int $offset);
+    public function offset(int $offset = 0);
 
     /**
      * Query limit
@@ -40,7 +49,7 @@ interface LibriVox
      * @param int $limit
      * @return $this
      */
-    public function limit(int $limit);
+    public function limit(int $limit = 50);
 
     /**
      * Return the full set of data about the project
@@ -53,7 +62,7 @@ interface LibriVox
     /**
      * Fetch data from LibriVox
      *
-     * @return \Illuminate\Support\Collection|mixed
+     * @return Collection|mixed
      */
     public function fetch();
 }
