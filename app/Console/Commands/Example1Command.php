@@ -49,15 +49,16 @@ class Example1Command extends Command
         $limit = $this->option('limit');
 
         do {
-            $this->warn("Making a request to LibriVox API, offset: {$start}");
+            $this->warn("Trying to make a request to LibriVox API");
             // Get the books available from LibriVox. The server returns by default
-            // only 50 records in each query.
+            // only 50 records in each query if no limits are defined.
             $books = $librivox->audiobooks()->offset($start)->limit($limit)->extended(true)->fetch();
 
             // Get the total number of books returned by the server's response.
             $total = $books->count();
 
-            $this->info("Server has responded with {$total} books. Mapping database...");
+            $this->warn("The server returned a response with {$total} books");
+            $this->warn("Mapping database. Please wait, this may take a while...");
 
             // Show a progress bar starting at 0 and ending with the total number of
             // books to be processed.
@@ -92,27 +93,6 @@ class Example1Command extends Command
                     }
                 }
 
-                // Associate book sections.
-                if (is_array($book['sections']) && !empty($book['sections'])) {
-                    foreach ($book['sections'] as $section) {
-                        // At this point, we begin to create the sections of the book, as the
-                        // relationship between the book and the sections is a One to Many
-                        // relationship (a book can have many sections an vice versa), first
-                        // the sections are created and then we associate the sections created
-                        // with the book being iterated.
-                        $sectionReference = Section::firstOrNew(Arr::except($section, ['readers']));
-
-                        $sectionReference->book()->associate($bookReference)->save();
-
-                        // Associate section readers.
-                        if (is_array($section['readers']) && !empty($section['readers'])) {
-                            foreach ($section['readers'] as $reader) {
-                                Reader::firstOrCreate($reader)->sections()->syncWithoutDetaching($sectionReference);
-                            }
-                        }
-                    }
-                }
-
                 // Move one step forward in the progress bar to show the user the status of
                 // the operation.
                 $this->output->progressAdvance();
@@ -124,7 +104,7 @@ class Example1Command extends Command
             // completed.
             $this->output->progressFinish();
 
-            $this->info("Done, sleeping queue for {$this->option('sleep')} seconds...");
+            $this->info("Batch completed. Sleeping queue for {$this->option('sleep')} seconds");
             $this->newLine();
 
             // Delay the execution of the next loop, in this way we avoid sending many

@@ -46,7 +46,7 @@ class Example2Command extends Command
         // Get all the books available in the database.
         $books = Book::select('id', 'thumbnail', 'url_iarchive')->get();
 
-        $this->warn("Fetching thumbnails of the books. Please, be patient...");
+        $this->warn("Fetching book thumbnails. Please, wait...");
 
         // Show a progress bar starting at 0 and ending with the total number of
         // books to be processed.
@@ -79,7 +79,7 @@ class Example2Command extends Command
         // completed.
         $this->output->progressFinish();
 
-        $this->info('Completed. All the thumbnails has been fetched successfully');
+        $this->info('Completed. All book thumbnails has been fetched successfully');
     }
 
     /**
