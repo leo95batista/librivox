@@ -11,21 +11,21 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Symfony\Component\Console\Input\InputOption;
 
-class Example1Command extends Command
+class FetchBooksCommand extends Command
 {
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'command:name1';
+    protected $name = 'fetch:books';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Fetch books';
 
     /**
      * Create a new command instance.
@@ -128,7 +128,7 @@ class Example1Command extends Command
     {
         return [
             ['start', null, InputOption::VALUE_OPTIONAL, 'Position from where the first iteration starts', 0],
-            ['limit', null, InputOption::VALUE_OPTIONAL, 'Number of records in each iteration', 50],
+            ['batch', null, InputOption::VALUE_OPTIONAL, 'Number of records in each iteration', 50],
             ['sleep', null, InputOption::VALUE_OPTIONAL, 'Sleep interval in seconds', 60],
         ];
     }

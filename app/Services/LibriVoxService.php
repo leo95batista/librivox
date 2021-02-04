@@ -185,11 +185,23 @@ class LibriVoxService implements LibriVox
     /**
      * @inheritdoc
      *
-     * @param Book $book
-     * @return array|mixed
+     * @param Book|null $book
+     * @return array|\SimpleXMLElement|string
+     * @throws GuzzleException
      */
-    public function fetchRSS(Book $book = null)
+    public function fetchRss(Book $book = null)
     {
-        // TODO
+        $client = new Client();
+
+        try {
+            $response = $client->get($book->url_rss)->getBody()->getContents();
+        } catch (ClientException $exception) {
+            return [];
+        }
+
+        // Sanitize the string returned by the response.
+        $response = str_replace('itunes:', '', $response);
+
+        return simplexml_load_string($response, null, LIBXML_NOCDATA);
     }
 }

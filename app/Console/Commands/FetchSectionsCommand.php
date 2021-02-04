@@ -2,27 +2,27 @@
 
 namespace App\Console\Commands;
 
-use App\Contracts\InternetArchive;
+use App\Contracts\LibriVox;
 use App\Models\Book;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 
-class Example2Command extends Command
+class FetchSectionsCommand extends Command
 {
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'command:name2';
+    protected $name = 'fetch:sections';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Fetch book sections';
 
     /**
      * Create a new command instance.
@@ -37,38 +37,34 @@ class Example2Command extends Command
     /**
      * Execute the console command.
      *
-     * @param InternetArchive $internetArchive
+     * @param LibriVox $librivox
      * @return void
      * @throws GuzzleException
      */
-    public function handle(InternetArchive $internetArchive)
+    public function handle(LibriVox $librivox)
     {
         // Get all the books available in the database.
-        $books = Book::select('id', 'thumbnail', 'url_iarchive')->get();
+        $books = Book::select('id', 'url_rss')->get();
 
-        $this->warn("Fetching book thumbnails. Please, wait...");
+        $this->warn("Fetching book sections. Please, wait...");
 
         // Show a progress bar starting at 0 and ending with the total number of
         // books to be processed.
         $this->output->progressStart($books->count());
 
-        foreach ($books->chunk(15) as $chunk) {
-            foreach ($chunk as $book) {
-                // Request the book thumbnail only if its value in the database is
-                // currently empty. In case the thumbnail column contains any value, the
-                // current iteration is discarded and continues to the next one.
-                if (!empty($book->thumbnail)) {
-                    $this->output->progressAdvance();
-                    continue;
-                }
-
-                $book->thumbnail = $internetArchive->fetchDetails($book)->thumbnail();
-                $book->save();
-
-                // Move one step forward in the progress bar to show the user the status of
-                // the operation.
-                $this->output->progressAdvance();
+        foreach ($books as $book) {
+            foreach ($librivox->fetchRss($book)->channel->item as $item) {
+                $book->sections()->firstOrCreate([
+                    'title' => $item->title,
+                    'audio' => $item->enclosure['url'],
+                    'duration' => $item->duration,
+                    'file_type' => $item->enclosure['type']
+                ]);
             }
+
+            // Move one step forward in the progress bar to show the user the status of
+            // the operation.
+            $this->output->progressAdvance();
 
             // Delay the execution of the next loop, in this way we avoid sending many
             // requests in a short period of time.
@@ -79,7 +75,7 @@ class Example2Command extends Command
         // completed.
         $this->output->progressFinish();
 
-        $this->info('Completed. All book thumbnails has been fetched successfully');
+        $this->info('Completed. All book sections has been fetched successfully');
     }
 
     /**

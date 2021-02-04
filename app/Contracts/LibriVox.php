@@ -3,6 +3,7 @@
 namespace App\Contracts;
 
 use App\Models\Book;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Collection;
 
 interface LibriVox
@@ -70,8 +71,9 @@ interface LibriVox
     /**
      * Fetch book RSS file
      *
-     * @param Book $book
-     * @return mixed
+     * @param Book|null $book
+     * @return array|\SimpleXMLElement|string
+     * @throws GuzzleException
      */
-    public function fetchRSS(Book $book);
+    public function fetchRss(Book $book);
 }
