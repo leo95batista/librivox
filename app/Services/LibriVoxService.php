@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Contracts\LibriVox;
+use App\Models\Book;
 use App\Traits\Helpers;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
@@ -159,23 +160,6 @@ class LibriVoxService implements LibriVox
      */
     public function fetch()
     {
-        $response = $this->sendRequest();
-
-        // Here you will define the keys that will be removed from the response
-        // returned by the server.
-        $excludeKeys = ['id', 'reader_id'];
-
-        return collect($this->recursiveUnset($response, $excludeKeys))->collapse();
-    }
-
-    /**
-     * Send request to LibriVox API server
-     *
-     * @return mixed
-     * @throws GuzzleException
-     */
-    private function sendRequest()
-    {
         $client = new Client();
 
         // Address where the request will be made
@@ -189,6 +173,23 @@ class LibriVoxService implements LibriVox
             return [];
         }
 
-        return json_decode($request->getBody()->getContents(), true);
+        $response = json_decode($request->getBody()->getContents(), true);
+
+        // Here you will define the keys that will be removed from the response
+        // returned by the server.
+        $excludeKeys = ['id', 'reader_id'];
+
+        return collect($this->recursiveUnset($response, $excludeKeys))->collapse();
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @param Book $book
+     * @return array|mixed
+     */
+    public function fetchRSS(Book $book = null)
+    {
+        // TODO
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Contracts;
 
+use App\Models\Book;
 use Illuminate\Support\Collection;
 
 interface LibriVox
@@ -65,4 +66,12 @@ interface LibriVox
      * @return Collection|mixed
      */
     public function fetch();
+
+    /**
+     * Fetch book RSS file
+     *
+     * @param Book $book
+     * @return mixed
+     */
+    public function fetchRSS(Book $book);
 }

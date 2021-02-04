@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Contracts\LibriVox;
 use App\Models\Book;
 use Illuminate\Console\Command;
 
@@ -34,9 +35,10 @@ class Example3Command extends Command
     /**
      * Execute the console command.
      *
+     * @param LibriVox $librivox
      * @return void
      */
-    public function handle()
+    public function handle(LibriVox $librivox)
     {
         // Get all the books available in the database.
         $books = Book::select('id', 'url_rss')->get();
@@ -46,6 +48,10 @@ class Example3Command extends Command
         // Show a progress bar starting at 0 and ending with the total number of
         // books to be processed.
         $this->output->progressStart($books->count());
+
+        foreach ($books as $book) {
+            //
+        }
 
         // Fill in the progress bar to show the user that the operation has been
         // completed.
