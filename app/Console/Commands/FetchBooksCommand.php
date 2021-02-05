@@ -54,67 +54,69 @@ class FetchBooksCommand extends Command
             // only 50 records in each query if no limits are defined.
             $books = $librivox->audiobooks()->offset($start)->limit($batch)->extended(true)->fetch();
 
-            // Get the total number of books returned by the server's response.
-            $total = $books->count();
+            if (!empty($books)) {
+                // Get the total number of books returned by the server's response.
+                $total = $books->count();
 
-            $this->warn("The server returned a response with {$total} books");
-            $this->warn("Mapping database. Please wait, this may take a while...");
+                $this->warn("The server returned a response with {$total} books");
+                $this->warn("Mapping database. Please wait, this may take a while...");
 
-            // Show a progress bar starting at 0 and ending with the total number of
-            // books to be processed.
-            $this->output->progressStart($total);
+                // Show a progress bar starting at 0 and ending with the total number of
+                // books to be processed.
+                $this->output->progressStart($total);
 
-            foreach ($books as $book) {
-                // Check that the book does not exist in our database by verifying its
-                // properties, except for the properties author, genre, sections and
-                // translators. If the book doesn't exist, then we create it.
-                $bookReference = Book::firstOrCreate(Arr::except($book, [
-                    'authors', 'genres', 'sections', 'translators'
-                ]));
+                foreach ($books as $book) {
+                    // Check that the book does not exist in our database by verifying its
+                    // properties, except for the properties author, genre, sections and
+                    // translators. If the book doesn't exist, then we create it.
+                    $bookReference = Book::firstOrCreate(Arr::except($book, [
+                        'authors', 'genres', 'sections', 'translators'
+                    ]));
 
-                // Associate the authors of the book.
-                if (is_array($book['authors']) && !empty($book['authors'])) {
-                    foreach ($book['authors'] as $author) {
-                        Author::firstOrCreate($author)->books()->syncWithoutDetaching($bookReference);
+                    // Associate the authors of the book.
+                    if (is_array($book['authors']) && !empty($book['authors'])) {
+                        foreach ($book['authors'] as $author) {
+                            Author::firstOrCreate($author)->books()->syncWithoutDetaching($bookReference);
+                        }
                     }
+
+                    // Associate the genres of the book.
+                    if (is_array($book['genres']) && !empty($book['genres'])) {
+                        foreach ($book['genres'] as $genre) {
+                            Genre::firstOrCreate($genre)->books()->syncWithoutDetaching($bookReference);
+                        }
+                    }
+
+                    // Associate the book's translators.
+                    if (is_array($book['translators']) && !empty($book['translators'])) {
+                        foreach ($book['translators'] as $translator) {
+                            Translator::firstOrCreate($translator)->books()->syncWithoutDetaching($bookReference);
+                        }
+                    }
+
+                    // Move one step forward in the progress bar to show the user the status of
+                    // the operation.
+                    $this->output->progressAdvance();
                 }
 
-                // Associate the genres of the book.
-                if (is_array($book['genres']) && !empty($book['genres'])) {
-                    foreach ($book['genres'] as $genre) {
-                        Genre::firstOrCreate($genre)->books()->syncWithoutDetaching($bookReference);
-                    }
-                }
+                $start += $batch;
 
-                // Associate the book's translators.
-                if (is_array($book['translators']) && !empty($book['translators'])) {
-                    foreach ($book['translators'] as $translator) {
-                        Translator::firstOrCreate($translator)->books()->syncWithoutDetaching($bookReference);
-                    }
-                }
+                // Fill in the progress bar to show the user that the operation has been
+                // completed.
+                $this->output->progressFinish();
 
-                // Move one step forward in the progress bar to show the user the status of
-                // the operation.
-                $this->output->progressAdvance();
+                $this->info("Batch completed. Sleeping queue for {$this->option('sleep')} seconds");
+                $this->newLine();
+
+                // Delay the execution of the next loop, in this way we avoid sending many
+                // requests in a short period of time.
+                sleep($this->option('sleep'));
             }
-
-            $start += $batch;
-
-            // Fill in the progress bar to show the user that the operation has been
-            // completed.
-            $this->output->progressFinish();
-
-            $this->info("Batch completed. Sleeping queue for {$this->option('sleep')} seconds");
-            $this->newLine();
-
-            // Delay the execution of the next loop, in this way we avoid sending many
-            // requests in a short period of time.
-            sleep($this->option('sleep'));
 
             // Continue running the loop until an empty response is encountered
             // or the server returns an error. Any HTTP response code greater
             // than 200 will be treated as an error.
-        } while ($books->isNotEmpty());
+        } while (!empty($books));
 
         $this->info('Completed. The database has been successfully updated.');
     }
