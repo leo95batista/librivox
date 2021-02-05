@@ -5,16 +5,18 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AuthorResource;
 use App\Models\Author;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-class Authors extends Controller
+class AuthorsController extends Controller
 {
     /**
-     * Paginate the Authors model.
+     * Paginate Authors model.
      *
+     * @param Request $request
      * @return AnonymousResourceCollection
      */
-    public function index()
+    public function index(Request $request)
     {
         return AuthorResource::collection(Author::simplePaginate());
     }
@@ -22,10 +24,11 @@ class Authors extends Controller
     /**
      * Show specific author details.
      *
+     * @param Request $request
      * @param $id
      * @return AuthorResource
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
         return AuthorResource::make(Author::findOrFail($id));
     }

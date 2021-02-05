@@ -46,13 +46,13 @@ class FetchBooksCommand extends Command
     public function handle(LibriVox $librivox)
     {
         $start = $this->option('start');
-        $limit = $this->option('limit');
+        $batch = $this->option('batch');
 
         do {
             $this->warn("Trying to make a request to LibriVox API");
             // Get the books available from LibriVox. The server returns by default
             // only 50 records in each query if no limits are defined.
-            $books = $librivox->audiobooks()->offset($start)->limit($limit)->extended(true)->fetch();
+            $books = $librivox->audiobooks()->offset($start)->limit($batch)->extended(true)->fetch();
 
             // Get the total number of books returned by the server's response.
             $total = $books->count();
@@ -98,7 +98,7 @@ class FetchBooksCommand extends Command
                 $this->output->progressAdvance();
             }
 
-            $start += $limit;
+            $start += $batch;
 
             // Fill in the progress bar to show the user that the operation has been
             // completed.
