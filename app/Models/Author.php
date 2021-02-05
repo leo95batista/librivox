@@ -40,6 +40,15 @@ class Author extends Model
     ];
 
     /**
+     * @inheritdoc
+     *
+     * @var array[]
+     */
+    protected $relations = [
+        'books',
+    ];
+
+    /**
      * Books relationship
      *
      * @return BelongsToMany

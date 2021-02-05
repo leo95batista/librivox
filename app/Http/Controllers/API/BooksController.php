@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
 use App\Http\Resources\BookResource;
 use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-class BooksController extends Controller
+class BooksController extends ApiController
 {
     /**
      * Paginate Books model.
@@ -18,7 +17,11 @@ class BooksController extends Controller
      */
     public function index(Request $request)
     {
-        $resource = Book::with(['genres', 'authors', 'sections', 'translators']);
+        $resource = new Book();
+
+        if ($this->wantsExtendedInformation($request)) {
+            $resource = $resource->with($resource->getRelations());
+        }
 
         return BookResource::collection($resource->simplePaginate());
     }
@@ -32,7 +35,11 @@ class BooksController extends Controller
      */
     public function show(Request $request, $id)
     {
-        $resource = Book::findOrFail($id)->loadMissing(['genres', 'authors', 'sections', 'translators']);
+        $resource = Book::findOrFail($id);
+
+        if ($this->wantsExtendedInformation($request)) {
+            $resource = $resource->loadMissing($resource->getRelations());
+        }
 
         return BookResource::make($resource);
     }

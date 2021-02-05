@@ -52,6 +52,18 @@ class Book extends Model
     ];
 
     /**
+     * @inheritdoc
+     *
+     * @var array[]
+     */
+    protected $relations = [
+        'authors',
+        'genres',
+        'translators',
+        'sections'
+    ];
+
+    /**
      * Authors relationship
      *
      * @return BelongsToMany

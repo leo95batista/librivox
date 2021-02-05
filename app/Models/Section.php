@@ -39,6 +39,15 @@ class Section extends Model
     ];
 
     /**
+     * @inheritdoc
+     *
+     * @var array[]
+     */
+    protected $relations = [
+        'books',
+    ];
+
+    /**
      * Book relationship
      *
      * @return BelongsTo
