@@ -22,10 +22,10 @@ class CreateAuthorsTable extends Migration
     {
         Schema::create($this->table, function (Blueprint $table) {
             $table->id();
-            $table->text('first_name')->nullable();
-            $table->text('last_name')->nullable();
-            $table->text('dob')->nullable();
-            $table->text('dod')->nullable();
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('dob')->nullable();
+            $table->string('dod')->nullable();
             $table->timestamps();
         });
     }

@@ -22,7 +22,7 @@ class CreateGenresTable extends Migration
     {
         Schema::create($this->table, function (Blueprint $table) {
             $table->id();
-            $table->text('name')->nullable();
+            $table->string('name');
             $table->timestamps();
         });
     }

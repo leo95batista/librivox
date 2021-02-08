@@ -26,7 +26,7 @@ class BookResource extends JsonResource
             'genres' => GenreResource::collection($this->whenLoaded('genres')),
             'authors' => AuthorResource::collection($this->whenLoaded('authors')),
             'translators' => TranslatorResource::collection($this->whenLoaded('translators')),
-            'sections' => SectionResource::collection($this->whenLoaded('sections'))
+            'sections' => SectionResource::collection($this->whenLoaded('sections')),
         ];
     }
 }
