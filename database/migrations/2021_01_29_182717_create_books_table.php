@@ -25,9 +25,9 @@ class CreateBooksTable extends Migration
             $table->string('title');
             $table->string('language');
             $table->text('description')->nullable();
-            $table->string('url_text_source')->nullable();
             $table->integer('copyright_year')->nullable();
             $table->integer('num_sections')->nullable();
+            $table->text('url_text_source')->nullable();
             $table->text('url_rss')->nullable();
             $table->text('url_zip_file')->nullable();
             $table->text('url_project')->nullable();
