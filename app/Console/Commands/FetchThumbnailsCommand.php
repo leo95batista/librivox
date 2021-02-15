@@ -2,7 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Contracts\InternetArchive;
 use App\Models\Book;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -35,9 +37,11 @@ class FetchThumbnailsCommand extends Command
     /**
      * Execute the console command.
      *
+     * @param InternetArchive $internetArchive
      * @return void
+     * @throws GuzzleException
      */
-    public function handle()
+    public function handle(InternetArchive $internetArchive)
     {
         $sleep = $this->option('sleep');
         $chunks = $this->option('chunks');
@@ -61,6 +65,7 @@ class FetchThumbnailsCommand extends Command
                     continue;
                 }
 
+                $book->thumbnail = $internetArchive->fetchDetails($book)->thumbnail();
                 $book->save();
 
                 // Move one step forward in the progress bar to show the user the status of
