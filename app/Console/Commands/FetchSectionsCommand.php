@@ -43,10 +43,11 @@ class FetchSectionsCommand extends Command
      */
     public function handle(LibriVox $librivox)
     {
+        $start = $this->option('start');
         $sleep = $this->option('sleep');
 
         // Get all the books available in the database.
-        $books = Book::select('id', 'url_rss')->get();
+        $books = Book::select('id', 'url_rss', 'url_librivox')->get()->skip($start);
 
         $this->warn("Fetching book sections. Please, wait...");
 
@@ -55,6 +56,12 @@ class FetchSectionsCommand extends Command
         $this->output->progressStart($books->count());
 
         foreach ($books as $book) {
+            // Verify that LibriVox contains sections associated with the book,
+            // if not, ignore the iteration and jump to the next one.
+            if (empty($book->url_librivox)) {
+                continue;
+            }
+
             foreach ($librivox->fetchRSS($book)->channel->item as $item) {
                 $book->sections()->firstOrCreate([
                     'title' => $item->title,
@@ -88,6 +95,7 @@ class FetchSectionsCommand extends Command
     protected function getOptions()
     {
         return [
+            ['start', null, InputOption::VALUE_OPTIONAL, 'Position from where the first iteration starts', 0],
             ['sleep', null, InputOption::VALUE_OPTIONAL, 'Sleep interval in seconds', 30],
         ];
     }
