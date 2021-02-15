@@ -23,7 +23,7 @@ class CreateSectionsTable extends Migration
         Schema::create($this->table, function (Blueprint $table) {
             $table->id();
             $table->bigInteger('book_id')->unsigned();
-            $table->string('title');
+            $table->text('title');
             $table->string('audio')->nullable();
             $table->string('duration')->nullable();
             $table->string('file_type')->nullable();
