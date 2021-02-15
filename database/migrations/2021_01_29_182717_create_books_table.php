@@ -33,9 +33,9 @@ class CreateBooksTable extends Migration
             $table->text('url_project')->nullable();
             $table->text('url_librivox')->nullable();
             $table->text('url_other')->nullable();
+            $table->text('url_iarchive')->nullable();
             $table->string('totaltime')->nullable();
-            $table->string('totaltimesecs')->nullable();
-            $table->string('url_iarchive')->nullable();
+            $table->integer('totaltimesecs')->nullable();
             $table->string('thumbnail')->nullable();
             $table->timestamps();
         });

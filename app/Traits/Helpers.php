@@ -2,8 +2,6 @@
 
 namespace App\Traits;
 
-use Illuminate\Support\Collection;
-
 trait Helpers
 {
     /**
@@ -34,26 +32,5 @@ trait Helpers
         }
 
         return $array;
-    }
-
-    /**
-     * Convert an array to a collection recursively.
-     *
-     * @param array $array
-     * @return bool|Collection
-     */
-    public function recursiveCollect(array $array)
-    {
-        if (!is_array($array) || empty($array)) {
-            return false;
-        }
-
-        foreach ($array as $key => $value) {
-            if (is_array($value)) {
-                $array[$key] = call_user_func_array([$this, __FUNCTION__], [$value]);
-            }
-        }
-
-        return collect($array);
     }
 }

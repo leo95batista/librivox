@@ -7,6 +7,8 @@ use App\Models\Author;
 use App\Models\Book;
 use App\Models\Genre;
 use App\Models\Translator;
+use Exception;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Symfony\Component\Console\Input\InputOption;
@@ -42,17 +44,24 @@ class FetchBooksCommand extends Command
      *
      * @param LibriVox $librivox
      * @return void
+     * @throws GuzzleException
      */
     public function handle(LibriVox $librivox)
     {
         $start = $this->option('start');
         $batch = $this->option('batch');
+        $sleep = $this->option('sleep');
 
         do {
             $this->warn("Trying to make a request to LibriVox API");
-            // Get the books available from LibriVox. The server returns by default
-            // only 50 records in each query if no limits are defined.
-            $books = $librivox->audiobooks()->offset($start)->limit($batch)->extended(true)->fetch();
+
+            try {
+                // Get the books available from LibriVox. The server returns by default
+                // only 50 records in each query if no limits are defined.
+                $books = $librivox->audiobooks()->offset($start)->limit($batch)->extended(true)->fetchData();
+            } catch (Exception $exception) {
+                $this->error('Sorry, an error has occurred');
+            }
 
             if (!empty($books)) {
                 // Get the total number of books returned by the server's response.
@@ -105,12 +114,12 @@ class FetchBooksCommand extends Command
                 // completed.
                 $this->output->progressFinish();
 
-                $this->info("Batch completed. Sleeping queue for {$this->option('sleep')} seconds");
+                $this->info("Batch completed. Sleeping queue for {$sleep} seconds");
                 $this->newLine();
 
                 // Delay the execution of the next loop, in this way we avoid sending many
                 // requests in a short period of time.
-                sleep($this->option('sleep'));
+                sleep($sleep);
             }
 
             // Continue running the loop until an empty response is encountered

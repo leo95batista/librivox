@@ -5,10 +5,11 @@ namespace App\Services;
 use App\Contracts\LibriVox;
 use App\Models\Book;
 use App\Traits\Helpers;
+use Exception;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Collection;
+use SimpleXMLElement;
 
 class LibriVoxService implements LibriVox
 {
@@ -19,55 +20,47 @@ class LibriVoxService implements LibriVox
      *
      * @var string
      */
-    private static $resource = 'audiobooks';
+    protected static $resource = null;
 
     /**
      * Fields to return
      *
-     * @var string[]
+     * @var array
      */
-    public $fields = [];
+    protected $fields = [];
 
     /**
-     * Output format.
+     * Resource where you will search
      *
      * @var string
      */
-    public $format = 'json';
+    protected $format = 'json';
 
     /**
      * Query offset
      *
      * @var int
      */
-    public $offset = 0;
+    protected $offset = 0;
 
     /**
      * Query limit
      *
      * @var int
      */
-    public $limit = 50;
+    protected $limit = 0;
 
     /**
      * Return the full set of data
      *
      * @var bool
      */
-    public $extended = false;
-
-    /**
-     * LibriVox constructor.
-     */
-    public function __construct()
-    {
-        //
-    }
+    protected $extended = false;
 
     /**
      * @inheritdoc
      *
-     * @return $this|LibriVoxService
+     * @return $this
      */
     public function authors()
     {
@@ -79,7 +72,7 @@ class LibriVoxService implements LibriVox
     /**
      * @inheritdoc
      *
-     * @return $this|LibriVoxService
+     * @return $this
      */
     public function audiobooks()
     {
@@ -91,20 +84,8 @@ class LibriVoxService implements LibriVox
     /**
      * @inheritdoc
      *
-     * @return $this|LibriVoxService
-     */
-    public function audiotracks()
-    {
-        self::$resource = 'audiotracks';
-
-        return $this;
-    }
-
-    /**
-     * @inheritdoc
-     *
      * @param array $fields
-     * @return $this|mixed
+     * @return $this
      */
     public function fields(array $fields)
     {
@@ -116,10 +97,23 @@ class LibriVoxService implements LibriVox
     /**
      * @inheritdoc
      *
-     * @param int $offset
-     * @return $this|mixed
+     * @param string $format
+     * @return $this
      */
-    public function offset(int $offset = 0)
+    public function format(string $format)
+    {
+        $this->format = $format;
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @param int $offset
+     * @return $this
+     */
+    public function offset(int $offset)
     {
         $this->offset = $offset;
 
@@ -129,10 +123,10 @@ class LibriVoxService implements LibriVox
     /**
      * @inheritdoc
      *
-     * @param int $limit
-     * @return $this|mixed
+     * @param int $offset
+     * @return $this
      */
-    public function limit(int $limit = 50)
+    public function limit(int $limit)
     {
         $this->limit = $limit;
 
@@ -143,7 +137,7 @@ class LibriVoxService implements LibriVox
      * @inheritdoc
      *
      * @param bool $extended
-     * @return $this|mixed
+     * @return $this
      */
     public function extended(bool $extended)
     {
@@ -155,53 +149,50 @@ class LibriVoxService implements LibriVox
     /**
      * @inheritdoc
      *
-     * @return Collection|mixed
+     * @param Book $book
+     * @return array|SimpleXMLElement|string|null
      * @throws GuzzleException
      */
-    public function fetch()
+    public function fetchRSS(Book $book)
     {
         $client = new Client();
 
-        // Address where the request will be made
-        $address = 'https://librivox.org/api/feed/' . self::$resource;
-
         try {
-            $request = $client->get($address, [
-                'query' => http_build_query(get_object_vars($this)),
-            ]);
-        } catch (ClientException $exception) {
-            return [];
+            $request = $client->get($book->url_rss);
+        } catch (Exception $exception) {
+            return null;
         }
 
-        $response = json_decode($request->getBody()->getContents(), true);
+        // Replace some text strings to avoid problems when converting the XML
+        $response = str_replace('itunes:', '', $request->getBody()->getContents());
 
-        // Here you will define the keys that will be removed from the response
-        // returned by the server.
-        $excludeKeys = ['id', 'reader_id'];
-
-        return collect($this->recursiveUnset($response, $excludeKeys))->collapse();
+        return simplexml_load_string($response, null, LIBXML_NOCDATA);
     }
 
     /**
      * @inheritdoc
      *
-     * @param Book|null $book
-     * @return array|\SimpleXMLElement|string
+     * @return Collection|null
      * @throws GuzzleException
      */
-    public function fetchRss(Book $book = null)
+    public function fetchData()
     {
         $client = new Client();
 
         try {
-            $response = $client->get($book->url_rss)->getBody()->getContents();
-        } catch (ClientException $exception) {
-            return [];
+            $request = $client->get('https://librivox.org/api/feed/' . self::$resource, [
+                'query' => http_build_query(get_object_vars($this))
+            ]);
+        } catch (Exception $exception) {
+            return null;
         }
 
-        // Sanitize the string returned by the response.
-        $response = str_replace('itunes:', '', $response);
+        // Decode the JSON returned by the server and convert it to an associative array
+        $response = json_decode($request->getBody()->getContents(), true);
 
-        return simplexml_load_string($response, null, LIBXML_NOCDATA);
+        // Keys that will be removed from the response returned by the server
+        $excludeKeys = ['id', 'reader_id'];
+
+        return collect($this->recursiveUnset($response, $excludeKeys))->collapse();
     }
 }

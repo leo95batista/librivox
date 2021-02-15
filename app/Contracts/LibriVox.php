@@ -4,7 +4,6 @@ namespace App\Contracts;
 
 use App\Models\Book;
 use GuzzleHttp\Exception\GuzzleException;
-use Illuminate\Support\Collection;
 
 interface LibriVox
 {
@@ -23,13 +22,6 @@ interface LibriVox
     public function audiobooks();
 
     /**
-     * Search audio tracks
-     *
-     * @return $this
-     */
-    public function audiotracks();
-
-    /**
      * Fields to return
      *
      * @param array $fields
@@ -38,12 +30,20 @@ interface LibriVox
     public function fields(array $fields);
 
     /**
+     * Resource where you will search
+     *
+     * @param string $format
+     * @return $this
+     */
+    public function format(string $format);
+
+    /**
      * Query offset
      *
      * @param int $offset
      * @return $this
      */
-    public function offset(int $offset = 0);
+    public function offset(int $offset);
 
     /**
      * Query limit
@@ -51,7 +51,7 @@ interface LibriVox
      * @param int $limit
      * @return $this
      */
-    public function limit(int $limit = 50);
+    public function limit(int $limit);
 
     /**
      * Return the full set of data about the project
@@ -62,18 +62,19 @@ interface LibriVox
     public function extended(bool $extended);
 
     /**
-     * Fetch data from LibriVox
-     *
-     * @return Collection|mixed
-     */
-    public function fetch();
-
-    /**
-     * Fetch book RSS file
+     * Fetch RSS
      *
      * @param Book|null $book
      * @return array|\SimpleXMLElement|string
      * @throws GuzzleException
      */
-    public function fetchRss(Book $book);
+    public function fetchRSS(Book $book);
+
+    /**
+     * Fetch data
+     *
+     * @return \Illuminate\Support\Collection|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function fetchData();
 }

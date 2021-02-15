@@ -43,6 +43,8 @@ class FetchSectionsCommand extends Command
      */
     public function handle(LibriVox $librivox)
     {
+        $sleep = $this->option('sleep');
+
         // Get all the books available in the database.
         $books = Book::select('id', 'url_rss')->get();
 
@@ -53,7 +55,7 @@ class FetchSectionsCommand extends Command
         $this->output->progressStart($books->count());
 
         foreach ($books as $book) {
-            foreach ($librivox->fetchRss($book)->channel->item as $item) {
+            foreach ($librivox->fetchRSS($book)->channel->item as $item) {
                 $book->sections()->firstOrCreate([
                     'title' => $item->title,
                     'audio' => $item->enclosure['url'],
@@ -68,7 +70,7 @@ class FetchSectionsCommand extends Command
 
             // Delay the execution of the next loop, in this way we avoid sending many
             // requests in a short period of time.
-            sleep($this->option('sleep'));
+            sleep($sleep);
         }
 
         // Fill in the progress bar to show the user that the operation has been
