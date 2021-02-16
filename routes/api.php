@@ -21,6 +21,8 @@ Route::group(['prefix' => 'authors'], function () {
 Route::group(['prefix' => 'books'], function () {
     Route::get('/', [\App\Http\Controllers\API\BooksController::class, 'index']);
     Route::get('/{id}', [\App\Http\Controllers\API\BooksController::class, 'show']);
+
+    // Filter the relationships of the books by their identifier
     Route::get('/author/{id}', [\App\Http\Controllers\API\BooksController::class, 'author']);
     Route::get('/genre/{id}', [\App\Http\Controllers\API\BooksController::class, 'genre']);
     Route::get('/language/{id}', [\App\Http\Controllers\API\BooksController::class, 'language']);

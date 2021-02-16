@@ -17,9 +17,9 @@ class LanguagesController extends ApiController
      */
     public function index(Request $request)
     {
-        $resource = Language::simplePaginate();
+        $resource = new Language();
 
-        return LanguageResource::collection($resource);
+        return LanguageResource::collection($resource->simplePaginate());
     }
 
     /**

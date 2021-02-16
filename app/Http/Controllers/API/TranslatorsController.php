@@ -19,10 +19,6 @@ class TranslatorsController extends ApiController
     {
         $resource = new Translator();
 
-        if ($this->wantsExtendedInformation($request)) {
-            $resource = $resource->with($resource->getRelations());
-        }
-
         return TranslatorResource::collection($resource->simplePaginate());
     }
 
@@ -36,10 +32,6 @@ class TranslatorsController extends ApiController
     public function show(Request $request, $id)
     {
         $resource = Translator::findOrFail($id);
-
-        if ($this->wantsExtendedInformation($request)) {
-            $resource = $resource->loadMissing($resource->getRelations());
-        }
 
         return TranslatorResource::make($resource);
     }

@@ -17,9 +17,9 @@ class SectionsController extends ApiController
      */
     public function index(Request $request)
     {
-        $resource = Section::simplePaginate();
+        $resource = new Section();
 
-        return SectionResource::collection($resource);
+        return SectionResource::collection($resource->simplePaginate());
     }
 
     /**

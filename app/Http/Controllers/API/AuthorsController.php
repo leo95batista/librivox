@@ -19,10 +19,6 @@ class AuthorsController extends ApiController
     {
         $resource = new Author();
 
-        if ($this->wantsExtendedInformation($request)) {
-            $resource = $resource->with($resource->getRelations());
-        }
-
         return AuthorResource::collection($resource->simplePaginate());
     }
 
@@ -36,10 +32,6 @@ class AuthorsController extends ApiController
     public function show(Request $request, $id)
     {
         $resource = Author::findOrFail($id);
-
-        if ($this->wantsExtendedInformation($request)) {
-            $resource = $resource->loadMissing($resource->getRelations());
-        }
 
         return AuthorResource::make($resource);
     }

@@ -20,7 +20,6 @@ class AuthorResource extends JsonResource
             'dod' => $this->dod,
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
-            'books' => BookResource::collection($this->whenLoaded('books'))
         ];
     }
 }

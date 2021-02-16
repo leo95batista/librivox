@@ -19,10 +19,6 @@ class GenresController extends ApiController
     {
         $resource = new Genre();
 
-        if ($this->wantsExtendedInformation($request)) {
-            $resource = $resource->with($resource->getRelations());
-        }
-
         return GenreResource::collection($resource->simplePaginate());
     }
 
@@ -36,10 +32,6 @@ class GenresController extends ApiController
     public function show(Request $request, $id)
     {
         $resource = Genre::findOrFail($id);
-
-        if ($this->wantsExtendedInformation($request)) {
-            $resource = $resource->loadMissing($resource->getRelations());
-        }
 
         return GenreResource::make($resource);
     }
