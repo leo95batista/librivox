@@ -23,8 +23,8 @@ class BookResource extends JsonResource
             'description' => $this->description,
             'year' => $this->copyright_year,
             'time' => $this->totaltime,
-            'genres' => GenreResource::collection($this->whenLoaded('genres')),
-            'authors' => AuthorResource::collection($this->whenLoaded('authors')),
+            'genres' => GenreResource::collection($this->genres),
+            'authors' => AuthorResource::collection($this->authors),
             'translators' => TranslatorResource::collection($this->whenLoaded('translators')),
             'sections' => SectionResource::collection($this->whenLoaded('sections')),
         ];
