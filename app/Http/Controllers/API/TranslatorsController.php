@@ -17,7 +17,13 @@ class TranslatorsController extends ApiController
      */
     public function index(Request $request)
     {
-        return TranslatorResource::collection(Translator::simplePaginate());
+        $resource = new Translator();
+
+        if ($this->wantsExtendedInformation($request)) {
+            $resource = $resource->with($resource->getRelations());
+        }
+
+        return TranslatorResource::collection($resource->simplePaginate());
     }
 
     /**
@@ -29,6 +35,12 @@ class TranslatorsController extends ApiController
      */
     public function show(Request $request, $id)
     {
-        return TranslatorResource::make(Translator::findOrFail($id));
+        $resource = Translator::findOrFail($id);
+
+        if ($this->wantsExtendedInformation($request)) {
+            $resource = $resource->loadMissing($resource->getRelations());
+        }
+
+        return TranslatorResource::make($resource);
     }
 }
