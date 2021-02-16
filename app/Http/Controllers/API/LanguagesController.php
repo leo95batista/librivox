@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Http\Filters\LanguageFilter;
 use App\Http\Resources\LanguageResource;
 use App\Models\Language;
 use Illuminate\Http\Request;
@@ -13,13 +14,14 @@ class LanguagesController extends ApiController
      * Paginate Languages model.
      *
      * @param Request $request
+     * @param LanguageFilter $filter
      * @return AnonymousResourceCollection
      */
-    public function index(Request $request)
+    public function index(Request $request, LanguageFilter $filter)
     {
-        $resource = new Language();
+        $resource = Language::filter($filter)->simplePaginate();
 
-        return LanguageResource::collection($resource->simplePaginate());
+        return LanguageResource::collection($resource);
     }
 
     /**

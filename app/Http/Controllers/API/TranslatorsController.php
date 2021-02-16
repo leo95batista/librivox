@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Http\Filters\TranslatorFilter;
 use App\Http\Resources\TranslatorResource;
 use App\Models\Translator;
 use Illuminate\Http\Request;
@@ -13,13 +14,14 @@ class TranslatorsController extends ApiController
      * Paginate Translators model.
      *
      * @param Request $request
+     * @param TranslatorFilter $filter
      * @return AnonymousResourceCollection
      */
-    public function index(Request $request)
+    public function index(Request $request, TranslatorFilter $filter)
     {
-        $resource = new Translator();
+        $resource = Translator::filter($filter)->simplePaginate();
 
-        return TranslatorResource::collection($resource->simplePaginate());
+        return TranslatorResource::collection($resource);
     }
 
     /**

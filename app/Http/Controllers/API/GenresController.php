@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Http\Filters\GenreFilter;
 use App\Http\Resources\GenreResource;
 use App\Models\Genre;
 use Illuminate\Http\Request;
@@ -13,13 +14,14 @@ class GenresController extends ApiController
      * Paginate Genres model.
      *
      * @param Request $request
+     * @param GenreFilter $filter
      * @return AnonymousResourceCollection
      */
-    public function index(Request $request)
+    public function index(Request $request, GenreFilter $filter)
     {
-        $resource = new Genre();
+        $resource = Genre::filter($filter)->simplePaginate();
 
-        return GenreResource::collection($resource->simplePaginate());
+        return GenreResource::collection($resource);
     }
 
     /**

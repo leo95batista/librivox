@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Http\Filters\SectionFilter;
 use App\Http\Resources\SectionResource;
 use App\Models\Section;
 use Illuminate\Http\Request;
@@ -15,11 +16,11 @@ class SectionsController extends ApiController
      * @param Request $request
      * @return AnonymousResourceCollection
      */
-    public function index(Request $request)
+    public function index(Request $request, SectionFilter $filter)
     {
-        $resource = new Section();
+        $resource = Section::filter($filter)->simplePaginate();
 
-        return SectionResource::collection($resource->simplePaginate());
+        return SectionResource::collection($resource);
     }
 
     /**

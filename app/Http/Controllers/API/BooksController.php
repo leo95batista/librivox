@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Http\Filters\BookFilter;
 use App\Http\Resources\BookResource;
 use App\Models\Book;
 use Illuminate\Http\Request;
@@ -13,11 +14,12 @@ class BooksController extends ApiController
      * Paginate Books model.
      *
      * @param Request $request
+     * @param BookFilter $filter
      * @return AnonymousResourceCollection
      */
-    public function index(Request $request)
+    public function index(Request $request, BookFilter $filter)
     {
-        $resource = new Book();
+        $resource = Book::filter($filter);
 
         if ($this->wantsExtendedInformation($request)) {
             $resource = $resource->with($resource->getRelations());
