@@ -45,6 +45,38 @@ class BooksController extends ApiController
     }
 
     /**
+     * Get the books associated with a certain author.
+     *
+     * @param Request $request
+     * @param $id
+     * @return AnonymousResourceCollection
+     */
+    public function author(Request $request, $id)
+    {
+        $resource = Book::whereHas('authors', function ($query) use ($id) {
+            return $query->where('author_id', $id);
+        });
+
+        return BookResource::collection($resource->simplePaginate());
+    }
+
+    /**
+     * Get the books associated with a certain genre.
+     *
+     * @param Request $request
+     * @param $id
+     * @return AnonymousResourceCollection
+     */
+    public function genre(Request $request, $id)
+    {
+        $resource = Book::whereHas('genres', function ($query) use ($id) {
+            return $query->where('genre_id', $id);
+        });
+
+        return BookResource::collection($resource->simplePaginate());
+    }
+
+    /**
      * Get the books associated with a certain language.
      *
      * @param Request $request
@@ -54,6 +86,22 @@ class BooksController extends ApiController
     public function language(Request $request, $id)
     {
         $resource = Book::where('language_id', $id);
+
+        return BookResource::collection($resource->simplePaginate());
+    }
+
+    /**
+     * Get the books associated with a certain translator.
+     *
+     * @param Request $request
+     * @param $id
+     * @return AnonymousResourceCollection
+     */
+    public function translator(Request $request, $id)
+    {
+        $resource = Book::whereHas('translators', function ($query) use ($id) {
+            return $query->where('translator_id', $id);
+        });
 
         return BookResource::collection($resource->simplePaginate());
     }
