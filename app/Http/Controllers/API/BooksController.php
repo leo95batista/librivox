@@ -43,4 +43,18 @@ class BooksController extends ApiController
 
         return BookResource::make($resource);
     }
+
+    /**
+     * Get the books associated with a certain language.
+     *
+     * @param Request $request
+     * @param $id
+     * @return AnonymousResourceCollection
+     */
+    public function language(Request $request, $id)
+    {
+        $resource = Book::where('language_id', $id);
+
+        return BookResource::collection($resource->simplePaginate());
+    }
 }

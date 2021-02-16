@@ -17,8 +17,9 @@ class LanguagesController extends ApiController
      */
     public function index(Request $request)
     {
-        return LanguageResource::collection(Language::simplePaginate());
+        $resource = Language::simplePaginate();
 
+        return LanguageResource::collection($resource);
     }
 
     /**
@@ -30,6 +31,8 @@ class LanguagesController extends ApiController
      */
     public function show(Request $request, $id)
     {
-        return LanguageResource::make(Language::findOrFail($id));
+        $resource = Language::findOrFail($id);
+
+        return LanguageResource::make($resource);
     }
 }

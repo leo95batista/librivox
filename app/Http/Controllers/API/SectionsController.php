@@ -17,7 +17,9 @@ class SectionsController extends ApiController
      */
     public function index(Request $request)
     {
-        return SectionResource::collection(Section::simplePaginate());
+        $resource = Section::simplePaginate();
+
+        return SectionResource::collection($resource);
     }
 
     /**
@@ -29,6 +31,8 @@ class SectionsController extends ApiController
      */
     public function show(Request $request, $id)
     {
-        return SectionResource::make(Section::findOrFail($id));
+        $resource = Section::findOrFail($id);
+
+        return SectionResource::make($resource);
     }
 }
