@@ -22,9 +22,9 @@ class CreateBooksTable extends Migration
     {
         Schema::create($this->table, function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('language');
+            $table->text('title');
             $table->text('description')->nullable();
+            $table->unsignedBigInteger('language_id');
             $table->integer('copyright_year')->nullable();
             $table->integer('num_sections')->nullable();
             $table->text('url_text_source')->nullable();
@@ -36,8 +36,13 @@ class CreateBooksTable extends Migration
             $table->text('url_iarchive')->nullable();
             $table->string('totaltime')->nullable();
             $table->integer('totaltimesecs')->nullable();
-            $table->string('thumbnail')->nullable();
+            $table->text('thumbnail')->nullable();
+            $table->boolean('active')->default(true);
             $table->timestamps();
+
+            $table->foreign('language_id')->references('id')
+                ->on('languages')
+                ->cascadeOnDelete();
         });
     }
 

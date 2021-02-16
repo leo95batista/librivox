@@ -5,15 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * Class Section
+ * Class Author
  *
  * @package App\Models
  * @mixin Builder
  */
-class Section extends Model
+class Language extends Model
 {
     use HasFactory;
 
@@ -32,10 +32,7 @@ class Section extends Model
      * @var string[]
      */
     protected $fillable = [
-        'title',
-        'audio',
-        'duration',
-        'file_type',
+        'name',
         'active'
     ];
 
@@ -49,12 +46,12 @@ class Section extends Model
     ];
 
     /**
-     * Book relationship
+     * Books relationship
      *
-     * @return BelongsTo
+     * @return HasMany
      */
-    public function book()
+    public function books()
     {
-        return $this->belongsTo(Book::class);
+        return $this->hasMany(Book::class);
     }
 }

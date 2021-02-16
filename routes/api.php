@@ -28,6 +28,11 @@ Route::group(['prefix' => 'genres'], function () {
     Route::get('/{id}', [\App\Http\Controllers\API\GenresController::class, 'show']);
 });
 
+Route::group(['prefix' => 'languages'], function () {
+    Route::get('/', [\App\Http\Controllers\API\LanguagesController::class, 'index']);
+    Route::get('/{id}', [\App\Http\Controllers\API\LanguagesController::class, 'show']);
+});
+
 Route::group(['prefix' => 'sections'], function () {
     Route::get('/', [\App\Http\Controllers\API\SectionsController::class, 'index']);
     Route::get('/{id}', [\App\Http\Controllers\API\SectionsController::class, 'show']);

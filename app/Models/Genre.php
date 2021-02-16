@@ -32,7 +32,8 @@ class Genre extends Model
      * @var string[]
      */
     protected $fillable = [
-        'name'
+        'name',
+        'active'
     ];
 
     /**

@@ -35,7 +35,8 @@ class Translator extends Model
         'first_name',
         'last_name',
         'dob',
-        'dod'
+        'dod',
+        'active'
     ];
 
     /**

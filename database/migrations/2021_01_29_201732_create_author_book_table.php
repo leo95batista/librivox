@@ -22,8 +22,8 @@ class CreateAuthorBookTable extends Migration
     {
         Schema::create($this->table, function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('author_id')->unsigned();
-            $table->bigInteger('book_id')->unsigned();
+            $table->unsignedBigInteger('author_id');
+            $table->unsignedBigInteger('book_id');
 
             $table->foreign('author_id')->references('id')
                 ->on('authors')
@@ -32,7 +32,6 @@ class CreateAuthorBookTable extends Migration
             $table->foreign('book_id')->references('id')
                 ->on('books')
                 ->cascadeOnDelete();
-
         });
     }
 

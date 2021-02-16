@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
@@ -49,6 +50,7 @@ class Book extends Model
         'totaltimesecs',
         'url_iarchive',
         'thumbnail',
+        'active'
     ];
 
     /**
@@ -59,8 +61,9 @@ class Book extends Model
     protected $relations = [
         'authors',
         'genres',
+        'language',
+        'sections',
         'translators',
-        'sections'
     ];
 
     /**
@@ -84,13 +87,13 @@ class Book extends Model
     }
 
     /**
-     * Translators relationship
+     * Language Relationship
      *
-     * @return BelongsToMany
+     * @return BelongsTo
      */
-    public function translators()
+    public function language()
     {
-        return $this->belongsToMany(Translator::class);
+        return $this->belongsTo(Language::class);
     }
 
     /**
@@ -101,6 +104,16 @@ class Book extends Model
     public function sections()
     {
         return $this->hasMany(Section::class);
+    }
+
+    /**
+     * Translators relationship
+     *
+     * @return BelongsToMany
+     */
+    public function translators()
+    {
+        return $this->belongsToMany(Translator::class);
     }
 
     /**

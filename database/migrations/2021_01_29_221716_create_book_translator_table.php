@@ -22,8 +22,8 @@ class CreateBookTranslatorTable extends Migration
     {
         Schema::create($this->table, function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('book_id')->unsigned();
-            $table->bigInteger('translator_id')->unsigned();
+            $table->unsignedBigInteger('book_id');
+            $table->unsignedBigInteger('translator_id');
 
             $table->foreign('book_id')->references('id')
                 ->on('books')

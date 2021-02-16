@@ -22,10 +22,11 @@ class CreateTranslatorsTable extends Migration
     {
         Schema::create($this->table, function (Blueprint $table) {
             $table->id();
-            $table->string('first_name')->nullable();
-            $table->string('last_name')->nullable();
-            $table->string('dob')->nullable();
-            $table->string('dod')->nullable();
+            $table->text('first_name')->nullable();
+            $table->text('last_name')->nullable();
+            $table->text('dob')->nullable();
+            $table->text('dod')->nullable();
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }

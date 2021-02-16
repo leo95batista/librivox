@@ -6,6 +6,7 @@ use App\Contracts\LibriVox;
 use App\Models\Author;
 use App\Models\Book;
 use App\Models\Genre;
+use App\Models\Language;
 use App\Models\Translator;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
@@ -76,11 +77,19 @@ class FetchBooksCommand extends Command
 
                 foreach ($books as $book) {
                     // Check that the book does not exist in our database by verifying its
-                    // properties, except for the properties author, genre, sections and
-                    // translators. If the book doesn't exist, then we create it.
-                    $bookReference = Book::firstOrCreate(Arr::except($book, [
-                        'authors', 'genres', 'sections', 'translators'
+                    // attributes, except for the attributes author, genre, language, sections
+                    // and translators. If the book doesn't exist, then we create it.
+                    $bookReference = Book::firstOrNew(Arr::except($book, [
+                        'authors', 'genres', 'language', 'sections', 'translators'
                     ]));
+
+                    // Add the language of the book to the database if it does not exist.
+                    $langReference = Language::firstOrCreate([
+                        'name' => $book['language']
+                    ]);
+
+                    // Associate the book language.
+                    $bookReference->language()->associate($langReference)->save();
 
                     // Associate the authors of the book.
                     if (is_array($book['authors']) && !empty($book['authors'])) {
