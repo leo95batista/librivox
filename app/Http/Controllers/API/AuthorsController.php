@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Http\Filters\AuthorFilter;
 use App\Http\Resources\AuthorResource;
 use App\Models\Author;
 use Illuminate\Http\Request;
@@ -13,13 +14,14 @@ class AuthorsController extends ApiController
      * Paginate Authors model.
      *
      * @param Request $request
+     * @param AuthorFilter $filter
      * @return AnonymousResourceCollection
      */
-    public function index(Request $request)
+    public function index(Request $request, AuthorFilter $filter)
     {
-        $resource = new Author();
+        $resource = Author::filter($filter)->simplePaginate();
 
-        return AuthorResource::collection($resource->simplePaginate());
+        return AuthorResource::collection($resource);
     }
 
     /**
