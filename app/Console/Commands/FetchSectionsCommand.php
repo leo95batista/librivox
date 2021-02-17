@@ -43,12 +43,8 @@ class FetchSectionsCommand extends Command
      */
     public function handle(LibriVox $librivox)
     {
-        // Here are stored the books for which the sections could not be obtained.
-        $error = [];
-
         $start = $this->option('start');
         $sleep = $this->option('sleep');
-
 
         // Get all the books available in the database.
         $books = Book::select('id', 'title', 'url_rss', 'url_librivox')->get()->skip($start);
@@ -63,11 +59,6 @@ class FetchSectionsCommand extends Command
             // Verify that LibriVox contains sections associated with the book,
             // if not, ignore the iteration and jump to the next one.
             if (empty($book->url_librivox)) {
-                $error[] = [
-                    'id' => $book->id,
-                    'title' => $book->title
-                ];
-
                 // Book has no RSS address associate, jump to next book
                 continue;
             }
@@ -84,11 +75,6 @@ class FetchSectionsCommand extends Command
                         'file_type' => $item->enclosure['type']
                     ]);
                 }
-            } else {
-                $error[] = [
-                    'id' => $book->id,
-                    'title' => $book->title
-                ];
             }
 
             // Move one step forward in the progress bar to show the user the status of
@@ -103,13 +89,6 @@ class FetchSectionsCommand extends Command
         // Fill in the progress bar to show the user that the operation has been
         // completed.
         $this->output->progressFinish();
-
-        if (!empty($error)) {
-            $this->warn('Unable to get audio sections for the following books:');
-
-            // Show books for which sections could not be obtained.
-            $this->table(['ID', 'Book Title'], $error);
-        }
 
         $this->info('Completed. Book sections has been fetched successfully');
     }
