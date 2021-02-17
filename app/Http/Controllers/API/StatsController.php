@@ -26,7 +26,6 @@ class StatsController extends Controller
             'version' => '1.0.0'
         ];
 
-        // Convert the array to an object.
         $resource = json_decode(json_encode($resource));
 
         return StatsResource::make($resource);
