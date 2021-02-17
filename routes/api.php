@@ -13,6 +13,10 @@
 
 use Illuminate\Support\Facades\Route;
 
+Route::group(['prefix' => 'stats'], function () {
+    Route::get('/', [\App\Http\Controllers\API\StatsController::class, 'index']);
+});
+
 Route::group(['prefix' => 'authors'], function () {
     Route::get('/', [\App\Http\Controllers\API\AuthorsController::class, 'index']);
     Route::get('/{id}', [\App\Http\Controllers\API\AuthorsController::class, 'show']);
