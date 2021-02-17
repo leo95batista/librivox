@@ -159,14 +159,10 @@ class LibriVoxService implements LibriVox
 
         try {
             $request = $client->get($book->url_rss);
-        } catch (Exception $exception) {
-            return null;
-        }
 
-        // Replace some text strings to avoid problems when converting the XML
-        $response = str_replace('itunes:', '', $request->getBody()->getContents());
+            // Replace some text strings to avoid problems when converting the XML
+            $response = str_replace('itunes:', '', $request->getBody()->getContents());
 
-        try {
             return simplexml_load_string($response, null, LIBXML_NOCDATA);
         } catch (Exception $exception) {
             return null;
