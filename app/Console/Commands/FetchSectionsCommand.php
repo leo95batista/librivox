@@ -68,7 +68,7 @@ class FetchSectionsCommand extends Command
                     'title' => $book->title
                 ];
 
-                // Jump to next book
+                // Book has no RSS address associate, jump to next book
                 continue;
             }
 
@@ -108,7 +108,7 @@ class FetchSectionsCommand extends Command
             $this->warn('Unable to get audio sections for the following books:');
 
             // Show books for which sections could not be obtained.
-            $this->table(['ID', 'Title'], $error);
+            $this->table(['ID', 'Book Title'], $error);
         }
 
         $this->info('Completed. Book sections has been fetched successfully');
