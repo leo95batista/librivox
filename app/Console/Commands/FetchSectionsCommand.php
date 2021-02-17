@@ -104,10 +104,12 @@ class FetchSectionsCommand extends Command
         // completed.
         $this->output->progressFinish();
 
-        $this->warn('Unable to get audio sections for the following books:');
+        if (!empty($error)) {
+            $this->warn('Unable to get audio sections for the following books:');
 
-        // Show books for which sections could not be obtained.
-        $this->table(['ID', 'Title'], $error);
+            // Show books for which sections could not be obtained.
+            $this->table(['ID', 'Title'], $error);
+        }
 
         $this->info('Completed. Book sections has been fetched successfully');
     }
