@@ -166,7 +166,11 @@ class LibriVoxService implements LibriVox
         // Replace some text strings to avoid problems when converting the XML
         $response = str_replace('itunes:', '', $request->getBody()->getContents());
 
-        return simplexml_load_string($response, null, LIBXML_NOCDATA);
+        try {
+            return simplexml_load_string($response, null, LIBXML_NOCDATA);
+        } catch (Exception $exception) {
+            return null;
+        }
     }
 
     /**

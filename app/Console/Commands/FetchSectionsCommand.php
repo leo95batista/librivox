@@ -43,11 +43,15 @@ class FetchSectionsCommand extends Command
      */
     public function handle(LibriVox $librivox)
     {
+        // Here are stored the books for which the sections could not be obtained.
+        $error = [];
+
         $start = $this->option('start');
         $sleep = $this->option('sleep');
 
+
         // Get all the books available in the database.
-        $books = Book::select('id', 'url_rss', 'url_librivox')->get()->skip($start);
+        $books = Book::select('id', 'title', 'url_rss', 'url_librivox')->get()->skip($start);
 
         $this->warn("Fetching book sections. Please, wait...");
 
@@ -59,16 +63,32 @@ class FetchSectionsCommand extends Command
             // Verify that LibriVox contains sections associated with the book,
             // if not, ignore the iteration and jump to the next one.
             if (empty($book->url_librivox)) {
+                $error[] = [
+                    'id' => $book->id,
+                    'title' => $book->title
+                ];
+
+                // Jump to next book
                 continue;
             }
 
-            foreach ($librivox->fetchRSS($book)->channel->item as $item) {
-                $book->sections()->firstOrCreate([
-                    'title' => $item->title,
-                    'audio' => $item->enclosure['url'],
-                    'duration' => $item->duration,
-                    'file_type' => $item->enclosure['type']
-                ]);
+            // Get the content of the RSS file.
+            $rss = $librivox->fetchRSS($book);
+
+            if (isset($rss->channel)) {
+                foreach ($rss->channel->item as $item) {
+                    $book->sections()->firstOrCreate([
+                        'title' => $item->title,
+                        'audio' => $item->enclosure['url'],
+                        'duration' => $item->duration,
+                        'file_type' => $item->enclosure['type']
+                    ]);
+                }
+            } else {
+                $error[] = [
+                    'id' => $book->id,
+                    'title' => $book->title
+                ];
             }
 
             // Move one step forward in the progress bar to show the user the status of
@@ -84,7 +104,12 @@ class FetchSectionsCommand extends Command
         // completed.
         $this->output->progressFinish();
 
-        $this->info('Completed. All book sections has been fetched successfully');
+        $this->warn('Unable to get audio sections for the following books:');
+
+        // Show books for which sections could not be obtained.
+        $this->table(['ID', 'Title'], $error);
+
+        $this->info('Completed. Book sections has been fetched successfully');
     }
 
     /**
