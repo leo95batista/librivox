@@ -65,8 +65,12 @@ class FetchThumbnailsCommand extends Command
                     continue;
                 }
 
-                $book->thumbnail = $internetArchive->fetchDetails($book)->thumbnail();
-                $book->save();
+                $details = $internetArchive->fetchDetails($book);
+
+                if (!is_null($details)) {
+                    $book->thumbnail = $internetArchive->fetchDetails($book)->thumbnail();
+                    $book->save();
+                }
 
                 // Move one step forward in the progress bar to show the user the status of
                 // the operation.
