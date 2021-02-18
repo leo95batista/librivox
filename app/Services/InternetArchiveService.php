@@ -27,8 +27,10 @@ class InternetArchiveService implements InternetArchive
      */
     public function thumbnail()
     {
-        if (array_key_exists('misc', $this->data)) {
-            return $this->data['misc']['image'];
+        if (is_array($this->data)) {
+            if (array_key_exists('misc', $this->data)) {
+                return $this->data['misc']['image'];
+            }
         }
 
         return null;
