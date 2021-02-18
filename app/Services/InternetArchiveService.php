@@ -53,11 +53,11 @@ class InternetArchiveService implements InternetArchive
                     'output' => 'json'
                 ],
             ]);
+
+            $this->data = json_decode($request->getBody()->getContents(), true);
         } catch (ClientException $exception) {
             return null;
         }
-
-        $this->data = json_decode($request->getBody()->getContents(), true);
 
         return $this;
     }
