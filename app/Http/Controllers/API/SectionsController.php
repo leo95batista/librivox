@@ -14,6 +14,7 @@ class SectionsController extends ApiController
      * Paginate Sections model.
      *
      * @param Request $request
+     * @param SectionFilter $filter
      * @return AnonymousResourceCollection
      */
     public function index(Request $request, SectionFilter $filter)

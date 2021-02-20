@@ -183,15 +183,15 @@ class LibriVoxService implements LibriVox
             $request = $client->get('https://librivox.org/api/feed/' . self::$resource, [
                 'query' => http_build_query(get_object_vars($this))
             ]);
+
+            // Decode the JSON returned by the server and convert it to an associative array
+            $response = json_decode($request->getBody()->getContents(), true);
+
+            // Keys that will be removed from the response returned by the server
+            $excludeKeys = ['id', 'reader_id'];
         } catch (Exception $exception) {
             return null;
         }
-
-        // Decode the JSON returned by the server and convert it to an associative array
-        $response = json_decode($request->getBody()->getContents(), true);
-
-        // Keys that will be removed from the response returned by the server
-        $excludeKeys = ['id', 'reader_id'];
 
         return collect($this->recursiveUnset($response, $excludeKeys))->collapse();
     }

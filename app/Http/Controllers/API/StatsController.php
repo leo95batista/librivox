@@ -13,15 +13,21 @@ use Illuminate\Http\Request;
 
 class StatsController extends Controller
 {
+    /**
+     * Show server stats.
+     *
+     * @param Request $request
+     * @return StatsResource
+     */
     public function index(Request $request)
     {
         $resource = [
             'total' => [
                 'authors' => Author::count(),
                 'books' => Book::count(),
-                'genres'=> Genre::count(),
-                'languages'=> Language::count(),
-                'sections'=> Section::count(),
+                'genres' => Genre::count(),
+                'languages' => Language::count(),
+                'sections' => Section::count(),
             ],
             'version' => '1.0.0'
         ];

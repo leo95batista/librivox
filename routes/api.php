@@ -13,6 +13,10 @@
 
 use Illuminate\Support\Facades\Route;
 
+Route::group(['prefix' => 'info'], function () {
+    Route::view('/', 'api.info');
+});
+
 Route::group(['prefix' => 'stats'], function () {
     Route::get('/', [\App\Http\Controllers\API\StatsController::class, 'index']);
 });
