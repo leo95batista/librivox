@@ -19,10 +19,12 @@ class BooksController extends ApiController
      */
     public function index(Request $request, BookFilter $filter)
     {
-        $resource = Book::filter($filter);
+        $model = new Book();
+
+        $resource = $model->filter($filter);
 
         if ($this->wantsExtendedInformation($request)) {
-            $resource = $resource->with($resource->getRelations());
+            $resource = $resource->with($model->getRelations());
         }
 
         return BookResource::collection($resource->simplePaginate());

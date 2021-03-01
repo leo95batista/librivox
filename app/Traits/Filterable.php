@@ -12,12 +12,10 @@ trait Filterable
      *
      * @param Builder $builder
      * @param Filter $filter
-     * @return Filterable
+     * @return Builder
      */
     public function scopeFilter(Builder $builder, Filter $filter)
     {
-        $filter->apply($builder);
-
-        return $this;
+        return $filter->apply($builder);
     }
 }
