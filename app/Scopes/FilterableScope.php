@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Traits;
+namespace App\Scopes;
 
 use App\Http\Filters\Filter;
 use Illuminate\Database\Eloquent\Builder;
 
-trait Filterable
+trait FilterableScope
 {
     /**
      * Apply all relevant filters.
@@ -16,6 +16,6 @@ trait Filterable
      */
     public function scopeFilter(Builder $builder, Filter $filter)
     {
-        return $filter->apply($builder)->where('active', true);
+        return $filter->apply($builder);
     }
 }

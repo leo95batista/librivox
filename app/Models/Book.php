@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use App\Traits\Filterable;
+use App\Scopes\ExcludeInactive;
+use App\Scopes\FilterableScope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,7 +20,7 @@ use Illuminate\Support\Str;
  */
 class Book extends Model
 {
-    use HasFactory, Filterable;
+    use HasFactory, FilterableScope;
 
     /**
      * @inheritdoc
@@ -66,6 +67,18 @@ class Book extends Model
         'sections',
         'translators',
     ];
+
+    /**
+     * @inheritdoc
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope(new ExcludeInactive());
+    }
 
     /**
      * Authors relationship

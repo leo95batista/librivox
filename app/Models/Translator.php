@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use App\Traits\Filterable;
+use App\Scopes\ExcludeInactive;
+use App\Scopes\FilterableScope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class Translator extends Model
 {
-    use HasFactory, Filterable;
+    use HasFactory, FilterableScope;
 
     /**
      * @inheritdoc
@@ -48,6 +49,18 @@ class Translator extends Model
     protected $relations = [
         'books',
     ];
+
+    /**
+     * @inheritdoc
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope(new ExcludeInactive());
+    }
 
     /**
      * Books relationship
