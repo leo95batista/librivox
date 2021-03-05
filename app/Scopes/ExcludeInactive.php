@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Scope;
 class ExcludeInactive implements Scope
 {
     /**
-     * Apply the scope to a given Eloquent query builder.
+     * @inheritdoc
      *
      * @param Builder $builder
      * @param Model $model

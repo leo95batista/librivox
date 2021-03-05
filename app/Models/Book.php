@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Scopes\ExcludeBookWhenInactiveRelation;
 use App\Scopes\ExcludeInactive;
 use App\Scopes\FilterableScope;
 use Illuminate\Database\Eloquent\Builder;
@@ -78,6 +79,7 @@ class Book extends Model
         parent::boot();
 
         static::addGlobalScope(new ExcludeInactive());
+        static::addGlobalScope(new ExcludeBookWhenInactiveRelation());
     }
 
     /**

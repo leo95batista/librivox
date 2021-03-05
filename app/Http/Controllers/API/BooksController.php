@@ -19,7 +19,7 @@ class BooksController extends ApiController
      */
     public function index(Request $request, BookFilter $filter)
     {
-        $resource = Book::filter($filter)->whereHas('language');
+        $resource = Book::filter($filter);
 
         if ($this->wantsExtendedInformation($request)) {
             $resource = $resource->with($resource->getModel()->getRelations());

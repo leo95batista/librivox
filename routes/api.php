@@ -11,44 +11,52 @@
 |
 */
 
+use App\Http\Controllers\API\AuthorsController;
+use App\Http\Controllers\API\BooksController;
+use App\Http\Controllers\API\GenresController;
+use App\Http\Controllers\API\LanguagesController;
+use App\Http\Controllers\API\SectionsController;
+use App\Http\Controllers\API\StatsController;
+use App\Http\Controllers\API\TranslatorsController;
 use Illuminate\Support\Facades\Route;
 
+
 Route::group(['prefix' => 'stats'], function () {
-    Route::get('/', [\App\Http\Controllers\API\StatsController::class, 'index']);
+    Route::get('/', [StatsController::class, 'index']);
 });
 
 Route::group(['prefix' => 'authors'], function () {
-    Route::get('/', [\App\Http\Controllers\API\AuthorsController::class, 'index']);
-    Route::get('/{id}', [\App\Http\Controllers\API\AuthorsController::class, 'show']);
+    Route::get('/', [AuthorsController::class, 'index']);
+    Route::get('/{id}', [AuthorsController::class, 'show']);
 });
 
 Route::group(['prefix' => 'books'], function () {
-    Route::get('/', [\App\Http\Controllers\API\BooksController::class, 'index']);
-    Route::get('/{id}', [\App\Http\Controllers\API\BooksController::class, 'show']);
+    Route::get('/', [BooksController::class, 'index']);
+    Route::get('/{id}', [BooksController::class, 'show']);
 
     // Filter the relationships of the books by their identifier
-    Route::get('/author/{id}', [\App\Http\Controllers\API\BooksController::class, 'author']);
-    Route::get('/genre/{id}', [\App\Http\Controllers\API\BooksController::class, 'genre']);
-    Route::get('/language/{id}', [\App\Http\Controllers\API\BooksController::class, 'language']);
-    Route::get('/translator/{id}', [\App\Http\Controllers\API\BooksController::class, 'translator']);
+    Route::get('/author/{id}', [BooksController::class, 'author']);
+    Route::get('/genre/{id}', [BooksController::class, 'genre']);
+    Route::get('/language/{id}', [BooksController::class, 'language']);
+    Route::get('/translator/{id}', [BooksController::class, 'translator']);
 });
 
 Route::group(['prefix' => 'genres'], function () {
-    Route::get('/', [\App\Http\Controllers\API\GenresController::class, 'index']);
-    Route::get('/{id}', [\App\Http\Controllers\API\GenresController::class, 'show']);
+    Route::get('/', [GenresController::class, 'index']);
+    Route::get('/{id}', [GenresController::class, 'show']);
 });
 
 Route::group(['prefix' => 'languages'], function () {
-    Route::get('/', [\App\Http\Controllers\API\LanguagesController::class, 'index']);
-    Route::get('/{id}', [\App\Http\Controllers\API\LanguagesController::class, 'show']);
+    Route::get('/', [LanguagesController::class, 'index']);
+    Route::get('/{id}', [LanguagesController::class, 'show']);
 });
 
 Route::group(['prefix' => 'sections'], function () {
-    Route::get('/', [\App\Http\Controllers\API\SectionsController::class, 'index']);
-    Route::get('/{id}', [\App\Http\Controllers\API\SectionsController::class, 'show']);
+    Route::get('/', [SectionsController::class, 'index']);
+    Route::get('/{id}', [SectionsController::class, 'show']);
 });
 
 Route::group(['prefix' => 'translators'], function () {
-    Route::get('/', [\App\Http\Controllers\API\TranslatorsController::class, 'index']);
-    Route::get('/{id}', [\App\Http\Controllers\API\TranslatorsController::class, 'show']);
+    Route::get('/', [TranslatorsController::class, 'index']);
+    Route::get('/{id}', [TranslatorsController::class, 'show']);
 });
