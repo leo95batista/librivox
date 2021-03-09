@@ -3,6 +3,7 @@
 namespace App\Http\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
+use Kodewbit\Meteor\Filter;
 
 class AuthorFilter extends Filter
 {

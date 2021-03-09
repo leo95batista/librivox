@@ -3,11 +3,11 @@
 namespace App\Models;
 
 use App\Scopes\ExcludeInactive;
-use App\Scopes\FilterableScope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Kodewbit\Meteor\Filterable;
 
 /**
  * Class Section
@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Section extends Model
 {
-    use HasFactory, FilterableScope;
+    use HasFactory, Filterable;
 
     /**
      * @inheritdoc
