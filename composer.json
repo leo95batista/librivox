@@ -16,7 +16,7 @@
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
-        "kodewbit/meteor": "dev-main",
+        "kodewbit/meteor": "^1.0",
         "laravel/framework": "^8.12",
         "laravel/tinker": "^2.5"
     },

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5260abfc43d4fcd763493a7309c27cd2",
+    "content-hash": "cf2ccfe061c21b0ec025f9e5c4cc3904",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -894,16 +894,16 @@
         },
         {
             "name": "kodewbit/meteor",
-            "version": "dev-main",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kodewbit/meteor.git",
-                "reference": "fa51be4715bafd6db787cf1ab1ad49b38b7282f9"
+                "reference": "7bc2c9db93e523ca55c9a4820c0c21fd351d8c70"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kodewbit/meteor/zipball/fa51be4715bafd6db787cf1ab1ad49b38b7282f9",
-                "reference": "fa51be4715bafd6db787cf1ab1ad49b38b7282f9",
+                "url": "https://api.github.com/repos/kodewbit/meteor/zipball/7bc2c9db93e523ca55c9a4820c0c21fd351d8c70",
+                "reference": "7bc2c9db93e523ca55c9a4820c0c21fd351d8c70",
                 "shasum": ""
             },
             "require": {
@@ -912,7 +912,6 @@
                 "illuminate/support": "^6.0|^7.0|^8.0",
                 "php": "^7.4"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "laravel": {
@@ -944,9 +943,9 @@
             ],
             "support": {
                 "issues": "https://github.com/kodewbit/meteor/issues",
-                "source": "https://github.com/kodewbit/meteor/tree/main"
+                "source": "https://github.com/kodewbit/meteor/tree/v1.0.0"
             },
-            "time": "2021-03-09T17:09:56+00:00"
+            "time": "2021-03-10T16:24:28+00:00"
         },
         {
             "name": "laravel/framework",
@@ -7410,9 +7409,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "kodewbit/meteor": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
